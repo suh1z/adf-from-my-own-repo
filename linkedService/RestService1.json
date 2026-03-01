@@ -4,7 +4,7 @@
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "https://open.faceit.com/data/v4",
+			"url": "https://open.faceit.com/data/v4/players/suh1na",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous",
 			"authHeaders": {
