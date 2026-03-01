@@ -14,8 +14,7 @@
 						"referenceName": "faceitApiKey",
 						"type": "LinkedServiceReference"
 					},
-					"secretName": "faceit-api-key-server",
-					"secretVersion": "d02c791db434497e83b159810c00de46"
+					"secretName": "faceit-api-key-server"
 				}
 			}
 		}
