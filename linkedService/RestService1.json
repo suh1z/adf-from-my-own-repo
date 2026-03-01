@@ -14,7 +14,10 @@
 						"referenceName": "faceitApiKey",
 						"type": "LinkedServiceReference"
 					},
-					"secretName": "faceit-api-key-client"
+					"secretName": {
+						"value": "faceit-api-key-client",
+						"type": "Expression"
+					}
 				}
 			}
 		}
