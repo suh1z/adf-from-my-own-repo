@@ -1,0 +1,9 @@
+{
+	"name": "adf-online23",
+	"location": "swedencentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "5ef6b5e0-c39c-48ba-bba5-9a30caaf564f",
+		"tenantId": "95c6060d-c47e-49ff-bd70-27dea493f241"
+	}
+}
