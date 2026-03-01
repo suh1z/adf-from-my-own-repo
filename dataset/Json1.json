@@ -9,7 +9,10 @@
 		"type": "Json",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation"
+				"type": "AzureBlobFSLocation",
+				"fileName": "player",
+				"folderPath": "players",
+				"fileSystem": "faceit"
 			}
 		},
 		"schema": {}
