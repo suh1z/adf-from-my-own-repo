@@ -91,12 +91,75 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"player_id": {
-								"value": "@activity('Get-Player-Data').output.firstRow.player_id",
+								"value": "@pipeline().parameters.player_name",
+								"type": "Expression"
+							}
+						}
+					},
+					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "Get-Player-History",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "check_player_id",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET"
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "FaceitAPI_playerHistory",
+						"type": "DatasetReference",
+						"parameters": {
+							"player_id": {
+								"value": "@activity('check_player_id').output.firstRow.player_id",
 								"type": "Expression"
 							}
 						}
 					}
-				}
+				],
+				"outputs": [
+					{
+						"referenceName": "FaceitAPI_PlayerBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"player_id": {
+								"value": "@concat(pipeline().parameters.player_name, '_history')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
 			}
 		],
 		"parameters": {
