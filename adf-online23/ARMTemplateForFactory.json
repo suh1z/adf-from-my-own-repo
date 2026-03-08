@@ -251,7 +251,12 @@
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
-										"parameters": {}
+										"parameters": {
+											"player_id": {
+												"value": "@item().user_id",
+												"type": "Expression"
+											}
+										}
 									}
 								}
 							]
