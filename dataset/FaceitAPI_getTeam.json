@@ -1,0 +1,32 @@
+{
+	"name": "FaceitAPI_getTeam",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FaceitAPI",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"player_id": {
+				"type": "string",
+				"defaultValue": "f7c53e78-107a-45eb-8225-30b8eb65e42f"
+			},
+			"nickname": {
+				"type": "string",
+				"defaultValue": "suh1na"
+			},
+			"team_id": {
+				"type": "string",
+				"defaultValue": "709dba24-823b-4f34-8047-2ef2942a744f"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@concat('teams/', dataset().team_id)",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	}
+}
