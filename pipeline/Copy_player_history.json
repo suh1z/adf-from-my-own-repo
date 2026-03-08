@@ -48,6 +48,49 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "check_player_id",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Get-Player-Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "FaceitAPI_PlayerBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"player_id": {
+								"value": "@activity('Get-Player-Data').output.firstRow.player_id",
+								"type": "Expression"
+							}
+						}
+					}
+				}
 			}
 		],
 		"parameters": {
