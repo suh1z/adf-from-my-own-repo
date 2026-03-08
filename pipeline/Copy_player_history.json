@@ -58,7 +58,8 @@
 		],
 		"parameters": {
 			"player_name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": " suh1na"
 			}
 		},
 		"variables": {
