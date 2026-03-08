@@ -118,6 +118,7 @@
 						"type": "Expression"
 					},
 					"isSequential": false,
+					"batchCount": 11,
 					"activities": [
 						{
 							"name": "Get-players",
