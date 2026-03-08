@@ -318,7 +318,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"player_id": {
-										"value": "@pipeline().parameters.player_id",
+										"value": "@pipeline().parameters.user_id",
 										"type": "Expression"
 									}
 								}
@@ -330,7 +330,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"player_id": {
-										"value": "@concat(pipeline().parameters.player_id, '_history')",
+										"value": "@concat(pipeline().parameters.user_id, '_history')",
 										"type": "Expression"
 									}
 								}
@@ -342,12 +342,12 @@
 					"elapsedTimeMetric": {}
 				},
 				"parameters": {
-					"player_id": {
+					"user_id": {
 						"type": "string"
 					}
 				},
 				"variables": {
-					"player_name": {
+					"user_id": {
 						"type": "String"
 					}
 				},
@@ -496,7 +496,7 @@
 										},
 										"waitOnCompletion": true,
 										"parameters": {
-											"player_id": {
+											"user_id": {
 												"value": "@item().user_id",
 												"type": "Expression"
 											}
