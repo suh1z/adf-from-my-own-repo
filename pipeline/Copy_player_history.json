@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "Copy_player_history",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Get-Player-Data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -34,13 +34,17 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "RestResource1",
-						"type": "DatasetReference"
+						"referenceName": "FaceitAPI_getPlayer",
+						"type": "DatasetReference",
+						"parameters": {
+							"player_id": "f7c53e78-107a-45eb-8225-30b8eb65e42f",
+							"nickname": "suh1na"
+						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Json1",
+						"referenceName": "FaceitAPI_PlayerBlob",
 						"type": "DatasetReference"
 					}
 				]

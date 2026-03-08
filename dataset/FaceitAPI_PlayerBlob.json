@@ -1,5 +1,5 @@
 {
-	"name": "Json1",
+	"name": "FaceitAPI_PlayerBlob",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorage1",

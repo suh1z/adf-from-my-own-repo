@@ -1,5 +1,5 @@
 {
-	"name": "FaceitAPI_playerHistory",
+	"name": "FaceitAPI_getPlayer",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "FaceitAPI",
@@ -9,12 +9,19 @@
 			"player_id": {
 				"type": "string",
 				"defaultValue": "f7c53e78-107a-45eb-8225-30b8eb65e42f"
+			},
+			"nickname": {
+				"type": "string",
+				"defaultValue": "suh1na"
 			}
 		},
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
-			"relativeUrl": "@concat('players/', dataset().player_id, '/history')"
+			"relativeUrl": {
+				"value": "@concat('players?nickname=', dataset().nickname)",
+				"type": "Expression"
+			}
 		},
 		"schema": []
 	}
