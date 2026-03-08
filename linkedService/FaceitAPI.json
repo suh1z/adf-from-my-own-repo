@@ -1,0 +1,22 @@
+{
+	"name": "FaceitAPI",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://open.faceit.com/data/v4",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous",
+			"authHeaders": {
+				"Authorization": {
+					"type": "AzureKeyVaultSecret",
+					"store": {
+						"referenceName": "faceitApiKey",
+						"type": "LinkedServiceReference"
+					},
+					"secretName": "faceit-api-key-client"
+				}
+			}
+		}
+	}
+}
