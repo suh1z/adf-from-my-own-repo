@@ -113,6 +113,11 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('get-team-players').output.firstRow.members\n",
+						"type": "Expression"
+					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Get-players",
@@ -123,7 +128,17 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"waitOnCompletion": true
+								"pipeline": {
+									"referenceName": "Copy_player_history",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"player_name": {
+										"value": "@item().nickname",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					]
