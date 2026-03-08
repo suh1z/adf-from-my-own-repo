@@ -1,0 +1,21 @@
+{
+	"name": "FaceitAPI",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FaceitAPI",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"player_id": {
+				"type": "string",
+				"defaultValue": "suh1na"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "@concat('players/', dataset().player_id, '/history')"
+		},
+		"schema": []
+	}
+}
