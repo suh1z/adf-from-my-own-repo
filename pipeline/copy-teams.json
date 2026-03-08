@@ -132,7 +132,13 @@
 									"referenceName": "Copy_player_history",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true
+								"waitOnCompletion": true,
+								"parameters": {
+									"player_id": {
+										"value": "@item().user_id",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					]
