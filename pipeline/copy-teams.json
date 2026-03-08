@@ -1,0 +1,141 @@
+{
+	"name": "copy-teams",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get-Team-Data",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "FaceitAPI_getTeam",
+						"type": "DatasetReference",
+						"parameters": {
+							"team_id": {
+								"value": "@pipeline().parameters.team_id",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "FaceitAPI_TeamBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"team_id": {
+								"value": "@pipeline().parameters.team_id",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "get-team-players",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Get-Team-Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "FaceitAPI_TeamBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"team_id": "@pipeline().parameters.team_id"
+						}
+					}
+				}
+			},
+			{
+				"name": "Get-each-player",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "get-team-players",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"activities": [
+						{
+							"name": "Get-players",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"waitOnCompletion": true
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"team_id": {
+				"type": "string",
+				"defaultValue": "709dba24-823b-4f34-8047-2ef2942a744f"
+			}
+		},
+		"annotations": []
+	}
+}
