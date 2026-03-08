@@ -5,12 +5,21 @@
 			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"player_id": {
+				"type": "string",
+				"defaultValue": "f7c53e78-107a-45eb-8225-30b8eb65e42f"
+			}
+		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "player",
+				"fileName": {
+					"value": "@dataset().player_id",
+					"type": "Expression"
+				},
 				"folderPath": "players",
 				"fileSystem": "faceit"
 			}
