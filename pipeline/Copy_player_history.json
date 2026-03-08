@@ -45,13 +45,7 @@
 				"outputs": [
 					{
 						"referenceName": "FaceitAPI_PlayerBlob",
-						"type": "DatasetReference",
-						"parameters": {
-							"player_id": {
-								"value": "@pipeline().parameters.player_name",
-								"type": "Expression"
-							}
-						}
+						"type": "DatasetReference"
 					}
 				]
 			}

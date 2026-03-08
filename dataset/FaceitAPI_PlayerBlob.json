@@ -7,8 +7,7 @@
 		},
 		"parameters": {
 			"player_id": {
-				"type": "string",
-				"defaultValue": "f7c53e78-107a-45eb-8225-30b8eb65e42f"
+				"type": "string"
 			}
 		},
 		"annotations": [],
