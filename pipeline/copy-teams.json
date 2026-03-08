@@ -135,7 +135,7 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"player_name": {
-										"value": "@item().nickname",
+										"value": "@item().user_id",
 										"type": "Expression"
 									}
 								}
