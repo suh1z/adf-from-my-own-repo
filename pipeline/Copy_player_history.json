@@ -30,7 +30,8 @@
 							"type": "JsonWriteSettings"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"parallelCopies": 11
 				},
 				"inputs": [
 					{
