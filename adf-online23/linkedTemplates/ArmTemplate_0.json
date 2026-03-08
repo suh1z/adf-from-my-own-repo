@@ -1,0 +1,634 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-online23"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storageonline23.dfs.core.windows.net/"
+		},
+		"faceitApiKey_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://kv-online23.vault.azure.net/"
+		},
+		"FaceitAPI_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://open.faceit.com/data/v4"
+		},
+		"RestService1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://open.faceit.com/data/v4/players?nickname=suh1na"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/faceitApiKey')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('faceitApiKey_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FaceitAPI_PlayerBlob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"player_id": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().player_id",
+							"type": "Expression"
+						},
+						"folderPath": "players",
+						"fileSystem": "faceit"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FaceitAPI_TeamBlob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"team_id": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().team_id",
+							"type": "Expression"
+						},
+						"folderPath": "teams",
+						"fileSystem": "faceit"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FaceitAPI')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('FaceitAPI_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous",
+					"authHeaders": {
+						"Authorization": {
+							"type": "AzureKeyVaultSecret",
+							"store": {
+								"referenceName": "faceitApiKey",
+								"type": "LinkedServiceReference"
+							},
+							"secretName": "faceit-api-key-client"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/faceitApiKey')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RestService1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('RestService1_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous",
+					"authHeaders": {
+						"Authorization": {
+							"type": "AzureKeyVaultSecret",
+							"store": {
+								"referenceName": "faceitApiKey",
+								"type": "LinkedServiceReference"
+							},
+							"secretName": {
+								"value": "faceit-api-key-client",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/faceitApiKey')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FaceitAPI_getPlayer')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FaceitAPI",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"player_id": {
+						"type": "string",
+						"defaultValue": "f7c53e78-107a-45eb-8225-30b8eb65e42f"
+					},
+					"nickname": {
+						"type": "string",
+						"defaultValue": "suh1na"
+					}
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "@concat('players?nickname=', dataset().nickname)",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FaceitAPI')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FaceitAPI_getTeam')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FaceitAPI",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"team_id": {
+						"type": "string",
+						"defaultValue": "709dba24-823b-4f34-8047-2ef2942a744f"
+					}
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "@concat('teams/', dataset().team_id)",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FaceitAPI')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FaceitAPI_playerHistory')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FaceitAPI",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"player_id": {
+						"type": "string",
+						"defaultValue": "f7c53e78-107a-45eb-8225-30b8eb65e42f"
+					}
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "@concat('players/', dataset().player_id, '/history')",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FaceitAPI')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_player_history')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get-Player-Data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET"
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "FaceitAPI_getPlayer",
+								"type": "DatasetReference",
+								"parameters": {
+									"player_id": "f7c53e78-107a-45eb-8225-30b8eb65e42f",
+									"nickname": "suh1na"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "FaceitAPI_PlayerBlob",
+								"type": "DatasetReference",
+								"parameters": {
+									"player_id": {
+										"value": "@pipeline().parameters.player_name",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "check_player_id",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Get-Player-Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "FaceitAPI_PlayerBlob",
+								"type": "DatasetReference",
+								"parameters": {
+									"player_id": {
+										"value": "@pipeline().parameters.player_name",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": true
+						}
+					},
+					{
+						"name": "Get-Player-History",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "check_player_id",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET"
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "FaceitAPI_playerHistory",
+								"type": "DatasetReference",
+								"parameters": {
+									"player_id": {
+										"value": "@activity('check_player_id').output.firstRow.player_id",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "FaceitAPI_PlayerBlob",
+								"type": "DatasetReference",
+								"parameters": {
+									"player_id": {
+										"value": "@concat(pipeline().parameters.player_name, '_history')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"player_name": {
+						"type": "string",
+						"defaultValue": " suh1na"
+					}
+				},
+				"variables": {
+					"player_name": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/FaceitAPI_getPlayer')]",
+				"[concat(variables('factoryId'), '/datasets/FaceitAPI_PlayerBlob')]",
+				"[concat(variables('factoryId'), '/datasets/FaceitAPI_playerHistory')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/copy-teams')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get-Team-Data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET",
+								"paginationRules": {
+									"supportRFC5988": "true"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "FaceitAPI_getTeam",
+								"type": "DatasetReference",
+								"parameters": {
+									"team_id": {
+										"value": "@pipeline().parameters.team_id",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "FaceitAPI_TeamBlob",
+								"type": "DatasetReference",
+								"parameters": {
+									"team_id": {
+										"value": "@pipeline().parameters.team_id",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "get-team-players",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Get-Team-Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "FaceitAPI_TeamBlob",
+								"type": "DatasetReference",
+								"parameters": {
+									"team_id": "@pipeline().parameters.team_id"
+								}
+							}
+						}
+					},
+					{
+						"name": "Get-each-player",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "get-team-players",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('get-team-players').output.firstRow.members\n",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Get-players",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Copy_player_history",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"player_name": {
+												"value": "@item().nickname",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"team_id": {
+						"type": "string",
+						"defaultValue": "709dba24-823b-4f34-8047-2ef2942a744f"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/FaceitAPI_getTeam')]",
+				"[concat(variables('factoryId'), '/datasets/FaceitAPI_TeamBlob')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy_player_history')]"
+			]
+		}
+	]
+}
