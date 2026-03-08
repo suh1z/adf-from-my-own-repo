@@ -134,7 +134,7 @@
 								},
 								"waitOnCompletion": true,
 								"parameters": {
-									"player_id": {
+									"user_id": {
 										"value": "@item().user_id",
 										"type": "Expression"
 									}
