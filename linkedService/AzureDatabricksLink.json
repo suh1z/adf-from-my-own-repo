@@ -1,6 +1,11 @@
 {
 	"name": "AzureDatabricksLink",
 	"properties": {
+		"parameters": {
+			"player_id": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureDatabricks",
 		"typeProperties": {
