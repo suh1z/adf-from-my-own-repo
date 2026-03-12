@@ -17,7 +17,7 @@
 		},
 		"AzureDatabricksLink_properties_typeProperties_existingClusterId": {
 			"type": "string",
-			"defaultValue": "0227-051900-frub2pds"
+			"defaultValue": "0312-220547-zolnbabl"
 		},
 		"FaceitAPI_properties_typeProperties_url": {
 			"type": "string",

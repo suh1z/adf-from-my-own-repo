@@ -17,7 +17,7 @@
 		},
 		"AzureDatabricksLink_properties_typeProperties_existingClusterId": {
 			"type": "string",
-			"defaultValue": "0227-051900-frub2pds"
+			"defaultValue": "0312-220547-zolnbabl"
 		},
 		"faceitApiKey_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -58,6 +58,11 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"parameters": {
+					"player_id": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "AzureDatabricks",
 				"typeProperties": {
@@ -388,7 +393,13 @@
 						},
 						"linkedServiceName": {
 							"referenceName": "AzureDatabricksLink",
-							"type": "LinkedServiceReference"
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"player_id": {
+									"value": "@pipeline().parameters.user_id",
+									"type": "Expression"
+								}
+							}
 						}
 					}
 				],
