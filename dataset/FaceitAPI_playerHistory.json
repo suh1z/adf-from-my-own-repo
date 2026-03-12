@@ -14,8 +14,12 @@
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
-			"relativeUrl": "@concat('players/', dataset().player_id, '/history')"
+			"relativeUrl": {
+				"value": "@concat('players/', dataset().player_id, '/history')",
+				"type": "Expression"
+			}
 		},
 		"schema": []
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }
