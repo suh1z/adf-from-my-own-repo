@@ -15,6 +15,10 @@
 			"type": "string",
 			"defaultValue": "https://storageonline23.dfs.core.windows.net/"
 		},
+		"AzureDatabricksLink_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0227-051900-frub2pds"
+		},
 		"FaceitAPI_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://open.faceit.com/data/v4"
@@ -59,6 +63,9 @@
 					},
 					"AzureDataLakeStorage1_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
+					},
+					"AzureDatabricksLink_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('AzureDatabricksLink_properties_typeProperties_existingClusterId')]"
 					},
 					"faceitApiKey_properties_typeProperties_baseUrl": {
 						"value": "[parameters('faceitApiKey_properties_typeProperties_baseUrl')]"

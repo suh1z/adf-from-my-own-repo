@@ -11,6 +11,9 @@
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://storageonline23.dfs.core.windows.net/"
 		},
+		"AzureDatabricksLink_properties_typeProperties_existingClusterId": {
+			"value": "0227-051900-frub2pds"
+		},
 		"FaceitAPI_properties_typeProperties_url": {
 			"value": "https://open.faceit.com/data/v4"
 		},
