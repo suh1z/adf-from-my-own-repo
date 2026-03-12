@@ -57,6 +57,39 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "silver-player-history",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Get-Player-History",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/jonatan.holmberg@abo.fi/adf-from-my-own-repo/notebooks/silver-player-history",
+					"baseParameters": {
+						"player_id": {
+							"value": "@pipeline().parameters.user_id",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricksLink",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"parameters": {
