@@ -204,7 +204,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Users/jonatan.holmberg@abo.fi/adf-from-my-own-repo/notebooks/rf-prediction-model",
+					"notebookPath": "/Users/jonatan.holmberg@abo.fi/adf-from-my-own-repo/notebooks/gold-rf-prediction-model",
 					"baseParameters": {
 						"team_id": {
 							"value": "@pipeline().parameters.team_id",
