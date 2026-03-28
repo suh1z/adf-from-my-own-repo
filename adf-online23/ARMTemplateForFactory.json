@@ -432,8 +432,7 @@
 				},
 				"parameters": {
 					"team_id": {
-						"type": "string",
-						"defaultValue": "709dba24-823b-4f34-8047-2ef2942a744f"
+						"type": "string"
 					}
 				},
 				"annotations": [],
